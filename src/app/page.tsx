@@ -202,7 +202,7 @@ export default function Home() {
         </div>
       )}
       
-      <div className="flex-1 flex flex-col min-h-0 relative z-10">
+      <div className="flex-1 flex flex-col min-h-0 custom-scrollbar relative z-10">
         <ChatArea 
           messages={messages} 
           isTyping={isTyping} 

@@ -11,7 +11,7 @@ interface CodeBlockProps {
 export const CodeBlock = ({ code, language }: CodeBlockProps) => {
   const [copied, setCopied] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  const [wrapped, setWrapped] = useState(false);
+  const [wrapped, setWrapped] = useState(true); // Default ke true agar konten dibungkus
 
   const copyToClipboard = async () => {
     try {
@@ -460,7 +460,7 @@ export const CodeBlock = ({ code, language }: CodeBlockProps) => {
       const lineNumber = index + 1;
       return `<div class="flex hover:bg-gray-800/20 transition-colors group" style="min-height: 1.5rem;">
         <span class="select-none text-gray-500 text-right pr-3 pl-2 border-r border-gray-700 bg-[#252526] group-hover:bg-gray-700/30 flex-shrink-0" style="width: ${lineNumberWidth}rem; font-size: 0.75rem; line-height: 1.5rem; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; display: flex; align-items: center; justify-content: flex-end;">${lineNumber}</span>
-        <span class="flex-1 pl-3 pr-2" style="line-height: 1.5rem; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; white-space: pre; overflow-wrap: normal;">${line || '&nbsp;'}</span>
+        <span class="flex-1 pl-3 pr-2" style="line-height: 1.5rem; font-family: 'Consolas', 'Monaco', 'Courier New', monospace; white-space: pre-wrap; overflow-wrap: break-word;">${line || '&nbsp;'}</span>
       </div>`;
     }).join('');
   };
@@ -470,28 +470,15 @@ export const CodeBlock = ({ code, language }: CodeBlockProps) => {
 
   return (
     <div className="relative bg-[#1e1e1e] border border-gray-600 rounded-lg overflow-hidden my-4 shadow-xl w-full max-w-full">
-      {/* ... existing code ... */}
-      <div className="flex items-center justify-between px-4 py-2 bg-[#2d2d30] border-b border-gray-600 flex-shrink-0">
+      {/* Header dengan tombol aksi */}
+      <div className="flex items-center justify-between px-2 sm:px-4 py-2 bg-[#2d2d30] border-b border-gray-600 flex-shrink-0 flex-wrap gap-1">
         <div className="flex items-center space-x-1">
-          <span className="text-sm text-gray-300 font-mono px-2 py-1 bg-[#3c3c3c] rounded">
+          <span className="text-xs sm:text-sm text-gray-300 font-mono px-2 py-1 bg-[#3c3c3c] rounded">
             {language || 'plaintext'}
           </span>
         </div>
         
-        <div className="flex items-center space-x-1">
-          <button className="flex items-center space-x-1 px-2 py-1 text-xs text-gray-300 hover:bg-gray-600 rounded transition-colors">
-            <Eye className="w-3 h-3" />
-            <span>Preview</span>
-          </button>
-          
-          <button 
-            onClick={() => setCollapsed(!collapsed)}
-            className="flex items-center space-x-1 px-2 py-1 text-xs text-gray-300 hover:bg-gray-600 rounded transition-colors"
-          >
-            {collapsed ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
-            <span>Collapse</span>
-          </button>
-          
+        <div className="flex items-center space-x-1 flex-wrap">
           <button 
             onClick={() => setWrapped(!wrapped)}
             className={`flex items-center space-x-1 px-2 py-1 text-xs rounded transition-colors ${
@@ -499,7 +486,15 @@ export const CodeBlock = ({ code, language }: CodeBlockProps) => {
             }`}
           >
             <WrapText className="w-3 h-3" />
-            <span>Wrap</span>
+            <span className="hidden sm:inline">Wrap</span>
+          </button>
+          
+          <button 
+            onClick={() => setCollapsed(!collapsed)}
+            className="flex items-center space-x-1 px-2 py-1 text-xs text-gray-300 hover:bg-gray-600 rounded transition-colors"
+          >
+            {collapsed ? <ChevronDown className="w-3 h-3" /> : <ChevronUp className="w-3 h-3" />}
+            <span className="hidden sm:inline">Collapse</span>
           </button>
           
           <button
@@ -509,12 +504,12 @@ export const CodeBlock = ({ code, language }: CodeBlockProps) => {
             {copied ? (
               <>
                 <Check className="w-3 h-3" />
-                <span>Copy</span>
+                <span className="hidden sm:inline">Copied</span>
               </>
             ) : (
               <>
                 <Copy className="w-3 h-3" />
-                <span>Copy</span>
+                <span className="hidden sm:inline">Copy</span>
               </>
             )}
           </button>
@@ -522,12 +517,8 @@ export const CodeBlock = ({ code, language }: CodeBlockProps) => {
       </div>
       
       {!collapsed && (
-        <div className={`bg-[#1e1e1e] w-full ${
-          wrapped ? 'overflow-x-hidden' : 'overflow-x-auto'
-        }`}>
-          <pre className={`text-sm font-mono text-[#d4d4d4] w-full ${
-            wrapped ? 'whitespace-pre-wrap' : 'whitespace-pre'
-          }`} style={{ margin: 0, padding: 0 }}>
+        <div className={`bg-[#1e1e1e] w-full overflow-x-auto`}>
+          <pre className={`text-xs sm:text-sm font-mono text-[#d4d4d4] w-full ${wrapped ? 'whitespace-pre-wrap' : 'whitespace-pre'}`} style={{ margin: 0, padding: 0 }}>
             <code 
               className="block w-full"
               dangerouslySetInnerHTML={{

@@ -32,16 +32,10 @@ export const MessageBubble = ({ message }: MessageBubbleProps) => {
   return (
     <div
       ref={messageRef}
-      className={`flex ${
-        message.sender === 'user' ? 'justify-end' : 'justify-start'
-      }`}
+      className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
     >
       <div
-        className={`max-w-[80%] rounded-2xl px-4 py-3 ${
-          message.sender === 'user'
-            ? 'bg-blue-600 text-white'
-            : 'bg-zinc-800 text-zinc-100'
-        }`}
+        className={`max-w-[95%] sm:max-w-[85%] md:max-w-[80%] rounded-2xl px-3 sm:px-4 py-3 ${message.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-zinc-800 text-zinc-100'}`}
       >
         <MessageContent text={message.content} />
         <div className="text-xs opacity-70 mt-2">

@@ -33,12 +33,12 @@ export const ChatInput = ({ inputText, setInputText, onSendMessage, isTyping }: 
   };
   
   return (
-    <div className="border-t border-zinc-800 p-4 md:p-6 bg-zinc-900 sticky bottom-0">
+    <div className="border-t border-zinc-800 p-4 md:p-4 bg-zinc-900 sticky bottom-0">
       {!isOnline && (
         <div className="max-w-3xl mx-auto mb-2 p-2 bg-red-900/50 text-red-200 rounded-md text-sm flex justify-between items-center">
           <div className="flex items-center gap-1.5">
             <AlertTriangle className="w-4 h-4 text-red-300" />
-            <span>Server Ollama tidak tersedia. Silakan pastikan server Ollama berjalan.</span>
+            <span>Server Down. Try again later.</span>
           </div>
           <button 
             onClick={checkOllamaStatus}
@@ -57,7 +57,7 @@ export const ChatInput = ({ inputText, setInputText, onSendMessage, isTyping }: 
             onChange={(e) => setInputText(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={getPlaceholderText()}
-            className={`flex-1 px-4 py-2 pr-14 bg-zinc-800 border rounded-xl resize-none focus:outline-none focus:ring-2 focus:border-transparent text-white placeholder-zinc-400 min-h-[36px] max-h-[100px] ${getStatusColor()}`}
+            className={`flex-1 px-2 py-2 pr-14 bg-zinc-800 border rounded-xl resize-none focus:outline-none focus:ring-2 focus:border-transparent text-white placeholder-zinc-400 min-h-[36px] max-h-[100px] ${getStatusColor()}`}
             disabled={isTyping || !isOnline}
             style={{
               fontSize: '16px',
@@ -75,7 +75,7 @@ export const ChatInput = ({ inputText, setInputText, onSendMessage, isTyping }: 
                 : 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
             }`}
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-3 h-3" />
           </button>
         </div>
       </div>
