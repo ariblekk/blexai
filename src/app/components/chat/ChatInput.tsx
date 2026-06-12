@@ -1,5 +1,4 @@
-import { Send, RefreshCw, AlertTriangle } from 'lucide-react';
-import { useOllamaStatus } from '../../hooks/useOllamaStatus';
+import { Send } from 'lucide-react';
 
 interface ChatInputProps {
   inputText: string;
@@ -9,15 +8,10 @@ interface ChatInputProps {
 }
 
 export const ChatInput = ({ inputText, setInputText, onSendMessage, isTyping }: ChatInputProps) => {
-  const { isOnline, error, checkOllamaStatus, isChecking } = useOllamaStatus();
-  
-  // Dapat mengirim pesan jika Ollama online atau sedang mengetik
-  const canSendMessage = isOnline || isTyping;
-  
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (!isTyping && canSendMessage) {
+      if (!isTyping) {
         onSendMessage();
       }
     }
@@ -27,29 +21,8 @@ export const ChatInput = ({ inputText, setInputText, onSendMessage, isTyping }: 
     return "Tanyakan sesuatu...";
   };
   
-  const getStatusColor = () => {
-    if (!isOnline) return 'border-red-700 focus:ring-red-500';
-    return 'border-zinc-700 focus:ring-blue-500';
-  };
-  
   return (
     <div className="border-t border-zinc-800 p-4 md:p-4 bg-zinc-900 sticky bottom-0">
-      {!isOnline && (
-        <div className="max-w-3xl mx-auto mb-2 p-2 bg-red-900/50 text-red-200 rounded-md text-sm flex justify-between items-center">
-          <div className="flex items-center gap-1.5">
-            <AlertTriangle className="w-4 h-4 text-red-300" />
-            <span>Server Down. Try again later.</span>
-          </div>
-          <button 
-            onClick={checkOllamaStatus}
-            disabled={isChecking}
-            className={`p-1.5 rounded-md ${isChecking ? 'bg-zinc-700 text-zinc-400' : 'bg-red-700 hover:bg-red-600 text-white'}`}
-            title="Periksa ulang koneksi"
-          >
-            <RefreshCw className={`w-4 h-4 ${isChecking ? 'animate-spin' : ''}`} />
-          </button>
-        </div>
-      )}
       <div className="max-w-3xl mx-auto">
         <div className="relative flex items-center">
           <textarea
@@ -57,8 +30,8 @@ export const ChatInput = ({ inputText, setInputText, onSendMessage, isTyping }: 
             onChange={(e) => setInputText(e.target.value)}
             onKeyPress={handleKeyPress}
             placeholder={getPlaceholderText()}
-            className={`flex-1 px-2 py-2 pr-14 bg-zinc-800 border rounded-xl resize-none focus:outline-none focus:ring-2 focus:border-transparent text-white placeholder-zinc-400 min-h-[36px] max-h-[100px] ${getStatusColor()}`}
-            disabled={isTyping || !isOnline}
+            className={`flex-1 px-2 py-2 pr-14 bg-zinc-800 border rounded-xl resize-none focus:outline-none focus:ring-2 focus:border-transparent text-white placeholder-zinc-400 min-h-[36px] max-h-[100px] border-zinc-700 focus:ring-blue-500`}
+            disabled={isTyping}
             style={{
               fontSize: '16px',
               WebkitAppearance: 'none',
@@ -68,9 +41,9 @@ export const ChatInput = ({ inputText, setInputText, onSendMessage, isTyping }: 
           
           <button
             onClick={onSendMessage}
-            disabled={isTyping || !inputText.trim() || !canSendMessage}
+            disabled={isTyping || !inputText.trim()}
             className={`absolute right-2 p-2 rounded-lg transition-all duration-200 ${
-              inputText.trim() && !isTyping && canSendMessage
+              inputText.trim() && !isTyping
                 ? 'bg-blue-600 hover:bg-blue-700 text-white'
                 : 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
             }`}

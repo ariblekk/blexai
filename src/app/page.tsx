@@ -13,7 +13,7 @@ export default function Home() {
   const [isTyping, setIsTyping] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
-  
+
   const {
     chatSessions,
     currentChatId,
@@ -51,9 +51,9 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           message: currentInput,
-          model: 'incept5/llama3.1-claude:latest' // Menggunakan model Ollama incept5/llama3.1-claude:latest
+          model: 'openai/gpt-oss-120b:free' // Menggunakan model gratis OpenRouter
         }),
       });
 
@@ -83,9 +83,9 @@ export default function Home() {
 
     } catch (error) {
       console.error('Error:', error);
-      
+
       let errorMessage: Message;
-      
+
       // Periksa apakah error adalah response dari API
       if (error instanceof Error && error.message.includes('Kedua AI service')) {
         // Tampilkan pesan khusus untuk user ketika semua AI service tidak tersedia
@@ -106,7 +106,7 @@ export default function Home() {
           isError: true
         };
       }
-      
+
       setMessages(prev => [...prev, errorMessage]);
     } finally {
       setIsTyping(false);
@@ -155,19 +155,18 @@ export default function Home() {
     <div className="flex h-dvh bg-gradient-to-br from-zinc-900 via-zinc-800 to-zinc-900 text-white relative">
       {/* Mobile Sidebar Overlay */}
       {isMobileSidebarOpen && (
-        <div 
+        <div
           className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
           onClick={() => setIsMobileSidebarOpen(false)}
         />
       )}
-      
+
       {/* Sidebar - Desktop: Always visible, Mobile: Overlay */}
       <div className={`
         hidden md:block flex-shrink-0
         md:relative fixed inset-y-0 left-0 z-50 
         transform transition-transform duration-300 ease-in-out 
-        ${
-          isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         }
       `}>
         <Sidebar
@@ -183,7 +182,7 @@ export default function Home() {
           onMobileClose={() => setIsMobileSidebarOpen(false)}
         />
       </div>
-      
+
       {/* Mobile Sidebar Overlay */}
       {isMobileSidebarOpen && (
         <div className="md:hidden fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 ease-in-out translate-x-0">
@@ -201,15 +200,15 @@ export default function Home() {
           />
         </div>
       )}
-      
+
       <div className="flex-1 flex flex-col min-h-0 custom-scrollbar relative z-10">
-        <ChatArea 
-          messages={messages} 
-          isTyping={isTyping} 
+        <ChatArea
+          messages={messages}
+          isTyping={isTyping}
           onSampleClick={handleSampleClick}
           onToggleSidebar={handleToggleMobileSidebar}
         />
-        
+
         <ChatInput
           inputText={inputText}
           setInputText={setInputText}
